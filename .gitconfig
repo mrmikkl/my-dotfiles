@@ -1,0 +1,21 @@
+[core]
+	excludesfile = /Users/mgoedecke/.gitignore_global
+	autocrlf = input
+	ignorecase = false
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Users/mgoedecke/apps/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[user]
+	name = Gödecke, Maik
+	email = maik.goedecke@god.de
+[commit]
+	template = /Users/mgoedecke/.stCommitMsg
+[log]
+    date = relative
+[format]
+    pretty = shortlog
+[pretty]
+    shortlog = format:%C(auto,yellow)%h%C(auto,magenta)%C(auto,blue)%>(12,trunc)%ad %C(auto,green)%<(26,trunc)%aN%C(auto,reset)%s%C(auto,red)% gD% D

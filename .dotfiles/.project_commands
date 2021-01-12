@@ -1,0 +1,32 @@
+##########################################
+# MEB PT
+##########################################
+alias mebpt='cd ~/Proggen/vcs/git/GOD/MEB_PT'
+alias mebptdev='cd ~/Proggen/vcs/git/GOD/MEB_PT/development/implementation'
+alias mebptui='cd ~/Proggen/vcs/git/GOD/MEB_PT/development/implementation/ui'
+alias mebptvw='cd ~/Proggen/vcs/git/GOD/MEB_PT_VW/conbaseprototyp'
+
+##########################################
+# MEB RT
+##########################################
+alias mebrtmigrate='mvn -s ~/Proggen/vcs/git/GOD/MEB_RT/meb/development/tools/maven/dev_settings.xml -f ~/Proggen/vcs/git/GOD/MEB_RT/meb/development/implementation/conbase/conbase-db/pom.xml flyway:clean flyway:migrate'
+alias mebrt='cd ~/Proggen/vcs/git/GOD/MEB_RT/meb'
+alias mebrtdocker='cd ~/Proggen/vcs/git/GOD/MEB_RT/meb/development/tools/docker'
+alias mebrtvw='cd ~/Proggen/vcs/git/GOD/MEB_RT_VW/conbase'
+
+# Docker
+alias mebrtdc='docker-compose -f ~/Proggen/vcs/git/GOD/MEB_RT/meb/development/tools/docker/docker-compose-base.yml -f ~/Proggen/vcs/git/GOD/MEB_RT/meb/development/tools/docker/docker-compose-dev.yml'
+alias mebrtdcup='mebrtdc up'
+alias mebrtdcdown='mebrtdc down'
+alias mebrtdcupf='mebrtdcup --force-recreate'
+alias mebrtdcmysql='mebrtdcupf mysql'
+alias mebrtdcwlp='mebrtdcupf wlp'
+
+function mebrtsynctovw() {
+    cd "/Users/mgoedecke/Proggen/vcs/git/GOD/MEB_RT/_delivery"
+    sh "./parcel-delivery-conbase-rt.sh" "$@"
+    cd -
+}
+
+alias mebrtpushtovw='git -C ~/Proggen/vcs/git/GOD/MEB_RT_VW/conbase push'
+

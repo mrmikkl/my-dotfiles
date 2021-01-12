@@ -1,0 +1,129 @@
+##########################################
+# Common Aliases
+##########################################
+alias reload_zsh='source ~/.zshrc'
+alias edit_zsh='vi ~/.zshrc'
+alias edit_p10k='vi ~/.p10k.zsh' # allows modifications of Powerlevel10k theme
+alias edit_zsh_config='vi ~/.dotfiles/.zsh_config'
+alias edit_app_cmd='vi ~/.dotfiles/.app_commands'
+alias edit_basic_cmd='vi ~/.dotfiles/.basic_commands'
+alias edit_exports='vi ~/.dotfiles/.exports'
+alias edit_project_cmd='vi ~/.dotfiles/.project_commands'
+
+#Find alias origin
+alias find_alias='zsh -ixc : 2>&1 | grep "$1"'
+alias find_alias_bash='bash -ixlc : 2>&1 | grep "$1"'
+
+alias lc='colorls -lA --gs --sd'
+alias lch='colorls -l --gs --sd'
+alias lt2='colorls --tree=2'
+alias lt3='colorls --tree=3'
+alias mv='mv -i'
+alias cp='cp -i'
+alias rmy='rm'
+alias rm='rm -i'
+alias grep='grep --color=auto'
+alias vi='vim'
+alias top_cpu='top -o cpu' #cpu
+alias top_mem='top -o vsize' #memory
+alias disk_usage='du -h . | grep "^[0-9\.]\+G"'
+alias -- --="cd -"
+
+if [ -x /usr/bin/colordiff ]
+then
+	alias diff='colordiff'
+fi
+
+alias tree="find . -type d | sed -e 1d -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|-/'"
+
+alias afk='/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend'
+
+alias h='history | grep $1'
+alias openports='netstat --all --numeric --programs --inet --inet6'
+alias pss='ps -efA | grep $1'
+
+alias sup='svn up $1'
+alias sco='svn co $1'
+
+alias wttr='curl http://wttr.in/braunschweig'
+
+##########################################
+# NAV
+##########################################
+alias cddocu='cd ~/Documents'
+alias cdproggen='cd ~/Proggen'
+alias cdsvn='cd ~/Proggen/vcs/svn'
+alias cdgit='cd ~/Proggen/vcs/git'
+alias cdgitgod='cd ~/Proggen/vcs/git/GOD'
+alias cdgitmy='cd ~/Proggen/vcs/git/MYGIT'
+alias cdgitplay='cd ~/Proggen/vcs/git/PLAYGROUND'
+alias cdapps='cd ~/apps'
+alias cdserver='cd ~/applicationServer'
+alias cddown='cd ~/Downloads'
+
+##########################################
+# Find functions
+##########################################
+
+# Find modification
+function findc() {
+   find . -type f | xargs grep -nHi "${1}" 
+}
+
+# find name
+function fn() {
+		if [ -z "${1}" -o -z "${2}" ]; then
+ 			echo "Usage: fn 1_PATH_WHERE_SEARCH_STARTS 2_NAME";
+ 			return 1;
+		fi;
+    find '${1}' -name '${2}' 2>/dev/null
+}
+
+# find text
+function ft() { 
+   grep -ris "$1" $2 
+}
+
+##########################################
+# Useful functions
+##########################################
+
+# Print IP from local interfaces
+function ip() {
+    echo -e "Ethernet:\t `ipconfig getifaddr en0 2> /dev/null`"
+    echo -e "WiFi:\t\t `ipconfig getifaddr en1 2> /dev/null`"
+    echo -e "External:\t `curl -s http://checkip.dyndns.org/ | grep -o '[0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*.[0-9]*'`"
+    echo ""
+}
+
+# Change to active Finder directory
+function cdf () { 
+   local fPath=`osascript -e '
+   tell app "finder"
+      try
+         set folderPath to (folder of the front window as alias)
+      on error
+         set folderPath to (path to desktop folder as alias)
+      end try
+      POSIX path of folderPath
+   end tell'
+   `;
+   echo "cd $fPath";
+   cd "$fPath" >/dev/null
+}
+
+##########################################
+# SSH
+##########################################
+
+# Generate ssh-key
+alias ssh_gen_key='ssh-keygen -t <also> -b 4096'
+# List identities in ssh-agent
+alias ssh_list_keys='ssh-add -l'
+
+# Add key to identites of ssh-agent
+function ssh_add_key() {
+	ssh-add "$HOME/.ssh/${1}"
+}
+
+

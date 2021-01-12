@@ -1,0 +1,394 @@
+##########################################
+# Suffix-2-App
+##########################################
+alias -s txt='idea'
+alias -s md='idea'
+
+##########################################
+# Apps
+##########################################
+alias sl='open -a /Volumes/Local/mgoedecke/apps/Sublime\ Text\ 2.app/ $1'
+alias dbeaver='nohup /Volumes/Local/mgoedecke/apps/DBeaver.app/Contents/MacOS/dbeaver &'
+alias hsqldb_meb='java -classpath /Volumes/Local/mgoedecke/apps/hsqldb-2.4.0/hsqldb/lib/hsqldb.jar org.hsqldb.server.Server --database.0 file:mebprototyp --dbname.0'
+
+##########################################
+# CHECKPOINT MOBILE
+##########################################
+alias checkpoint_stop='sudo launchctl unload /Library/LaunchDaemons/com.checkpoint.epc.service.plist'
+alias checkpoint_start='sudo launchctl load -w /Library/LaunchDaemons/com.checkpoint.epc.service.plist'
+
+##########################################
+# PROXY
+##########################################
+alias proxy="ssh -fN proxy"
+alias proxyc="ssh -O check proxy"
+alias proxyoff="ssh -O exit proxy"
+
+#########################################
+# ASCIIDOC
+#########################################
+alias adoctor='/usr/local/bin/asciidoctor'
+alias adoc='python ~/Proggen/vcs/git/PLAYGROUND/doc/asciidoc-8.6.9/asciidoc.py'
+alias a2x='python ~/Proggen/vcs/git/PLAYGROUND/doc/asciidoc-8.6.9/a2x.py'
+
+#########################################
+# MONGO DB
+#########################################
+alias mongo_start_macos_service='brew services start mongodb-community'
+alias mongo_start_background_process='mongod --config /usr/local/etc/mongod.conf --fork'
+alias mongo_ps='ps aux | grep -v grep | grep mongod'
+
+#########################################
+# NPM
+#########################################
+# Lists all node module folders
+alias lnm='find . -name '\''node_modules'\'' -type d -prune|xargs du -sh'
+# Deletes all node module folders
+alias dnm='find . -name '\''node_modules'\'' -type d -prune -exec rm -rf '\''{}'\'' +'
+
+#########################################
+# OPENSSL
+#########################################
+# Check CRT (Public Key)
+function openssl_list_crt() {
+	if [ -z "${1}" ]; then
+		echo "Usage: openssl_list_crt 1_CRT_LOCATION";
+		return 1;
+	fi;
+	openssl x509 -in ${1} -text -noout
+}
+
+# Check KEY (Private Key)
+function openssl_list_key() {
+	if [ -z "${1}" ]; then
+		echo "Usage: openssl_list_key 1_KEY_LOCATION";
+		return 1;
+	fi;
+	openssl rsa -in ${1} -check
+}
+
+# Check KEY (Private Key)
+function openssl_list_p12() {
+	if [ -z "${1}" ]; then
+		echo "Usage: openssl_list_p12 1_KEYSTORE_LOCATION";
+		return 1;
+	fi;
+	openssl pkcs12 -info -in ${1}
+}
+
+# Generate P12 Keystore
+function openssl_generate_p12() {
+	if [ -z "${1}" -o -z "${2}" -o -z "${3}" -o -z "${4}" ]; then
+		echo "Usage: openssl_generate_p12 1_CERT_LOCATION 2_KEY_LOCATION 3_ALIAS_NAME 4_KEYSTORE_TARGET_LOCATION";
+		return 1;
+	fi;
+	openssl pkcs12 -export -in ${1} -inkey ${2} -name ${3} -out ${4}
+}
+
+# Generate P12 Keystore with no keys
+function openssl_generate_p12_no-keys() {
+	if [ -z "${1}" -o -z "${2}" -o -z "${3}" ]; then
+		echo "Usage: openssl_generate_p12_no-keys 1_CERT_LOCATION 2_ALIAS_NAME 3_KEYSTORE_TARGET_LOCATION";
+		return 1;
+	fi;
+	openssl pkcs12 -export -in ${1} -name ${2} -out ${3} -nokeys
+}
+
+# Generate a self-signed certificate 
+function openssl_generate_cert() {
+	if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: openssl_generate_cert 1_KEY_TARGET_LOCATION 2_CERT_TARGET_LOCATION";
+		return 1;
+	fi;
+	openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout ${1} -out ${2}
+}
+
+# Generate a certificate signing request (CSR) for an existing private key
+function openssl_generate_csr() {
+	if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: openssl_generate_csr 1_KEY_LOCATION 2_CSR_TARGET_LOCATION";
+		return 1;
+	fi;
+	openssl req -out ${2} -key ${1} -new
+}
+
+# Convert DER cert to PEM 
+function openssl_convert_der-or-cer_to_pem() {
+	if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: openssl_convert_der-or-cer_to_pem 1_CRT_LOCATION 2_PEM_TARGET_LOCATION";
+		return 1;
+	fi;
+	openssl x509 -inform DER -outform PEM -in ${1} -out ${2}
+}
+
+# Convert PEM cert to CER 
+function openssl_convert_pem_to_der-or-cer() {
+	if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: openssl_convert_pem_to_der-or-cer 1_PEM_LOCATION 2_CRT_TARGET_LOCATION";
+		return 1;
+	fi;
+        openssl x509 -inform PEM -outform DER -in {1} -out {2}
+}
+
+# Test connection with CA file
+function openssl_test_connection() {
+	if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: openssl_test_connection 1_CA_CRT_FILE 2_TARGET_HOST 3_TARGET_PORT";
+		return 1;
+	fi;
+	openssl s_client -CAfile ${1} -connect ${2}:${3}
+}
+
+
+#########################################
+# KEYTOOL
+#########################################
+# List certs
+function keytool_list() {
+        if [ -z "${1}" ]; then
+		echo "Usage: keytool_list 1_KEYSTORE_LOCATION";
+		return 1;
+	fi;
+
+	keytool -list -v -keystore ${1}
+}
+
+# List cert with public key
+function keytool_list_with_pub_key() {
+        if [ -z "${1}" ]; then
+		echo "Usage: keytool_list_with_pub_key 1_KEYSTORE_LOCATION 2_ALIAS";
+		return 1;
+	fi;
+
+  keytool -list -rfc -keystore ${1} -alias ${2}
+}
+
+
+# List certs alternative
+function keytool_listalt() {
+        if [ -z "${1}" ]; then
+		echo "Usage: keytool_listalt 1_FILE_LOCATION";
+		return 1;
+	fi;
+
+	keytool -printcert -v -file ${1}
+}
+
+# List alias
+function keytool_list_alias() {
+        if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: keytool_list_alias 1_KEYSTORE_LOCATION 2_ALIAS_NAME";
+		return 1;
+	fi;
+
+	keytool -list -v -keystore ${1} -alias ${2}
+}
+
+# List Java cacerts
+function keytool_list_java() {
+	keytool -list -v -keystore $JAVA_HOME/jre/lib/security/cacerts
+}
+
+# Generate a Java keystore and key pair
+function keytool_generate_pkcs12() {
+	if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: keytool_generate_pkcs12 1_ALIAS_NAME 2_KEYSTORE_LOCATION";
+		return 1;
+	fi;
+
+	keytool -genkey -alias ${1} -keyalg RSA -keystore ${2} -storetype PKCS12 -storepass changeit -validity 730 -keysize 2048
+}
+
+# Generate a Self Signed Certificate
+function keytool_generate_jks() {
+	if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: keytool_generate_jks 1_ALIAS_NAME 2_KEYSTORE_LOCATION";
+		return 1;
+	fi;
+
+	keytool -genkey -alias ${1} -keyalg RSA -keystore ${2} -storetype JKS -storepass changeit -validity 730 -keysize 2048
+}
+
+# Import a root or intermediate CA certificate to an "existing" Java keystore. If not existing the keystore is simply created
+# and contains the imported certificate.	
+function keytool_import_cert() {
+        if [ -z "${1}" -o -z "${2}" -o -z "${3}" ]; then
+		echo "Usage: keytool_import_cert 1_ALIAS_NAME 2_IMPORT_CERT_LOCATION 3_KEYSTORE_LOCATION";
+		return 1;
+	fi;
+
+	keytool -import -trustcacerts -alias ${1} -file ${2} -keystore ${3}
+}
+
+# Export cert from keystore
+function keytool_export_cert() {
+        if [ -z "${1}" -o -z "${2}" -o -z "${3}" ]; then
+		echo "Usage: keytool_export_cert 1_ALIAS_NAME 2_KEYSTORE_LOCATION 3_TARGET_FILE";
+		return 1;
+	fi;
+
+	keytool -export -alias ${1} -keystore ${2} -file ${3}
+}
+
+# Delete a cert from a keystore
+function keytool_delete_cert() {
+        if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: keytool_delete_cert 1_ALIAS_NAME 2_KEYSTORE_LOCATION";
+		return 1;
+	fi;
+
+	keytool -delete -alias ${1} -keystore ${2}
+}
+
+# Change the password of a keystore
+function keytool_change_pw() {
+        if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: keytool_change_pw 1_KEYSTORE_LOCATION 2_NEW_PASSWORD";
+		return 1;
+	fi;
+
+	keytool -storepasswd -keystore ${1} -new ${2}
+}
+
+# Convert JKS keystore to PKCS12 keystore
+function keytool_convert_jks_to_pkcs12() {
+        if [ -z "${1}" -o -z "${2}" -o -z "${3}" -o -z "${4}" ]; then
+		echo "Usage: keytool_convert_jks_to_pkcs121 1_SRC_KEYSTORE_LOCATION 2_DEST_KEYSTORE_LOCATION 3_SRC_ALIAS 4_DEST_ALIAS";
+		return 1;
+	fi;
+	keytool -importkeystore -srckeystore ${1} -destkeystore ${2} -srcstoretype JKS -deststoretype PKCS12 -deststorepass changeit -srcalias ${3} -destalias ${4}
+}
+
+#########################################
+# EASY PKI
+#########################################
+# Create a root CA
+function easypki_create_ca() {
+        if [ -z "${1}" -o -z "${2}" ]; then
+		echo "Usage: easypki_create_ca 1_FILENAME 2_CA_NAME";
+		return 1;
+	fi;
+	easypki create --filename ${1} --ca ${2}
+}
+
+# Create certs signed by CA
+function easypki_create_cert_signed_by_ca() {
+        if [ -z "${1}" -o -z "${2}" -o -z "${3}" ]; then
+		echo "Usage: easypki_create_cert_signed_by_ca 1_CA_NAME 2_DNS_ALT_NAME 3_NAME";
+		return 1;
+	fi;
+	easypki create --ca-name ${1} --dns ${2} ${3}
+}
+
+
+#########################################
+# GIT
+#########################################
+alias ginit='git init' #create git repo
+alias gclone='git clone' #clone repo
+alias gbranch='git branch' #without param lists local branches, with param creates new branch 'git branch <branch_name>'
+alias gbranch_all='git branch --all' #lists all remote branches
+alias gbdel_local='git branch -d' #deletes a local branch 'git branch -d <branch_name>'
+alias gbdel_remote='git push origin --delete' #deletes a remote branch
+alias glog='git log' #show log of all commits
+alias gstatus='git status' #show staged/unstaged files
+alias gstatus_ignored='git status --ignored' # show git ignored files
+alias gremote_add='git remote add $1 $2' #add remote repo $1 is 'remote name' and $2 is 'repo URL'
+alias gremote_show='git remote -v' #shows all remote branches
+alias gremote_origin='git remote show origin' #shows the origin of the repo
+alias gadd='git add $1' #add file for commit (staged)
+alias gadd_all='git add --all'
+alias grm='git rm' #remove file for commit (staged)
+alias greset='git reset' #unstage file
+alias greset_hard='git reset -h' #reset to current last commit
+alias greset_soft='git reset HEAD~1 --soft   ' #last commit is uncommited, but changes stay
+alias gcommit='git commit'
+alias gpush='git push'
+alias gpush_origin_master='git push -u origin master' #push to origin/master and remember the params for upcoming pushs
+alias gpull='git pull'
+alias grebase='git rebase'
+alias gcheckout='git checkout' #switch to another branch 'git checkout <branch_name>' or to switch to a specific commit of the current branch 'git checkout -- <target>'
+alias gdiff='git diff'
+alias gdiff_head='git diff HEAD'
+alias gdiff_staged='git diff --staged'
+alias gmerge_noff='git merge --no-ff' #merge branches 'git merge <branch_name>' merges <branch_name> into current branch
+alias gbranch_all_merged_to_master='git branch -a --merged master' #shows all branches that are merged to master
+alias gbranch_all_merged='git branch -a --merged $1' #shows all branches that are merged
+
+
+function gdiff_file() {
+    if [ -z "${1}" ]; then
+        echo "Usage: gdiff_file branch";
+        return 1;
+    fi;
+    git diff $1 HEAD > diff.diff
+}
+
+function gar() {
+    if [ -z "${1}" -o -z "${2}" ]; then
+        echo "Usage: gar branch destination";
+        return 1;
+    fi;
+    if [[ `git rev-parse --is-inside-work-tree` == "true" ]]; then
+        echo "Exporting branch $1 to $2...";
+        git archive $1 | tar -x -C $2;
+        echo "Done.";
+    fi
+}
+
+##########################################
+# DOCKER
+##########################################
+# Log in
+alias dlogin='docker login reposrv02nexus3.entwicklung.god.de:5000'
+
+# Show
+alias dps='docker ps'
+alias dimgs='docker images'
+alias dlogs='docker logs'
+alias din='docker inspect'
+alias dmounts='docker inspect -f "{{json .Mounts}}"'
+# view docker tty
+# exit with ctrl-a k
+# background with ctrl-a d
+alias dscreen='screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty'
+
+# Actions
+alias drestart='docker restart'
+alias dstopcontainers='docker stop $(docker ps -a -q)'
+function dcopy() {
+    if [ -z "${1}" -o -z "${2}" -o -z "${3}" ]; then
+        echo "Usage: dcopy <DOCKER_NAME> <SRC_PATH_INSIDE_DOCKER> <TARGET_PATH>"
+        return 1;
+    fi;
+    docker cp ${1}:${2} ${3}
+}
+function dbash() {
+    if [ -z "${1}" ]; then
+        echo "Usage: dbash <DOCKER_NAME>"
+        return 1;
+    fi;
+    docker exec -it ${1} "bash"
+}
+
+# Removing
+alias drmcontainers='docker rm $(docker ps -a -q)'
+alias drmimgs='docker rmi $(docker images -q)'
+alias dpruneall='docker system prune -a --volumes'
+alias dprunenetwork='docker network prune'
+
+# Compose stuff
+alias dcb='docker-compose build'
+alias dcup='docker-compose up'
+alias dcupf='docker-compose up --force-recreate'
+alias dcdown='docker-compose down'
+alias dcstop='docker-compose stop'
+alias dcstart='docker-compose start'
+
+# Compose stuff for GOD
+alias dcg='docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml'
+alias dcgb='dcg build'
+alias dcgup='dcg up'
+alias dcgupf='dcg up --force-recreate'
+alias dcgdown='dcg down'
+

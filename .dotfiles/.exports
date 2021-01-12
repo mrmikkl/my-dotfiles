@@ -1,0 +1,18 @@
+#MAVEN_HOME=/Volumes/Local/mgoedecke/apache-maven-3.0.5
+#export MAVEN_HOME
+#MAVEN_OPTS="-Djavax.net.ssl.trustStoreType=KeychainStore -Djavax.net.ssl.trustStoreProvider=Apple -Xmx2048m -XX:MaxPermSize=1024m" 
+#export PATH=/opt/subversion/bin:$MAVEN_HOME/bin:$PATH
+#export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_71.jdk/Contents/Home
+#export MAVEN_OPTS
+#export PATH=/Volumes/local/karma/node_modules/mkdirp/bin:/Volumes/local/karma/node_modules/karma/bin:/Volumes/local/karma/node_modules/protractor/bin:/Users/mgoedecke/.gem/ruby/1.8/bin:/Volumes/local/karma/node_modules/bower/bin:$PATH
+
+export PATH=$PATH:/Applications/nocker.app/Contents/Resources/bin:/Volumes/Local/mgoedecke/apps/node-v6.11.0-darwin-x64/bin
+#export PATH=$PATH:/Users/mgoedecke/.nvm/versions/node/v10.22.0/lib/node_modules/vega-lite/bin/
+export PATH=$PATH:/Users/mgoedecke/Proggen/apps/vegalite/node_modules/.bin
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+
+##########################################
+# Language setting
+##########################################
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
